@@ -1,9 +1,9 @@
 resource "aws_lambda_function" "hello_lambda" {
-  function_name = "project2-hello-lambda"
-  role          = aws_iam_role.lambda_exec.arn
-  handler       = "index.handler"
-  runtime       = "nodejs18.x"
-  filename      = "${path.module}/../lambda-code/index.zip"   # We'll zip next
+  function_name    = "project2-hello-lambda"
+  role             = aws_iam_role.lambda_exec.arn
+  handler          = "index.handler"
+  runtime          = "nodejs18.x"
+  filename         = "${path.module}/../lambda-code/index.zip" # We'll zip next
   source_code_hash = filebase64sha256("${path.module}/../lambda-code/index.zip")
 }
 # Give Lambda permission to access DynamoDB
