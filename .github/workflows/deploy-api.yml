@@ -8,10 +8,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # 1️⃣ Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -19,13 +22,31 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
 
+      # 3️⃣ Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
+      # 4️⃣ Initialize Terraform
       - name: Terraform Init
         run: terraform init
         working-directory: terraform
 
+      # 5️⃣ Check formatting
+      - name: Terraform Format
+        run: terraform fmt -check
+        working-directory: terraform
+
+      # 6️⃣ Validate Terraform code
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: terraform
+
+      # 7️⃣ Preview what will be applied
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: terraform
+
+      # 8️⃣ Apply Terraform safely
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve tfplan
         working-directory: terraform
